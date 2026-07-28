@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kori Jazz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fff8b6;
+    --ink: #0161a3;
+    --white: #ffffff;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ---------- Header ---------- */
+
+  header {
+    padding: 24px 24px 0;
+  }
+
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-wrap {
+    grid-column: 2;
+    display: flex;
+    justify-content: center;
+  }
+
+  .logo {
+    width: 96px;
+    height: auto;
+    display: block;
+  }
+
+  nav {
+    grid-column: 3;
+    justify-self: end;
+  }
+
+  nav ul {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+
+  nav a {
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    position: relative;
+  }
+
+  nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0%;
+    height: 2px;
+    background: var(--ink);
+    transition: width 0.2s ease;
+  }
+
+  nav a:hover::after {
+    width: 100%;
+  }
+
+  /* Mobile nav toggle */
+  .nav-toggle {
+    display: none;
+    grid-column: 3;
+    justify-self: end;
+    background: none;
+    border: none;
+    color: var(--ink);
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  .nav-toggle svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  /* ---------- Hero ---------- */
+
+  .hero {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-family: 'Azeret Mono', monospace;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(28px, 6vw, 56px);
+    line-height: 1.08;
+    letter-spacing: 0.01em;
+    text-align: center;
+    transform: rotate(-1.5deg);
+  }
+
+  .hero .tagline {
+    margin-top: 20px;
+    font-size: clamp(15px, 2.4vw, 19px);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  .event-date {
+    font-family: 'Azeret Mono', monospace;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(18px, 3vw, 26px);
+    letter-spacing: 0.02em;
+    margin-top: 28px;
+    line-height: 1.3;
+    text-align: center;
+    transform: rotate(-1.5deg);
+  }
+
+  .event-day {
+    font-size: clamp(30px, 6vw, 48px);
+    display: inline-block;
+  }
+
+  /* ---------- Sections ---------- */
+
+  section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px 72px;
+  }
+
+  section h2 {
+    font-family: 'Azeret Mono', monospace;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: clamp(22px, 4vw, 30px);
+    margin-bottom: 24px;
+    text-align: center;
+    transform: rotate(-1.5deg);
+  }
+
+  .card {
+  background: transparent;
+  border: 2px solid var(--ink);
+  border-radius: 16px;
+  padding: 28px;
+}
+
+.no-border {
+  border: none;
+  padding: 0;
+}
+
+  .schedule-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .schedule-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(1, 97, 163, 0.25);
+    font-weight: 500;
+  }
+
+  .schedule-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .schedule-list time {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .map-card {
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    text-align: center;
+    padding: 24px;
+  }
+
+  .map-card iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 12px;
+  }
+
+  .lineup-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+
+  .band-card {
+    background: transparent;
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-family: inherit;
+    color: inherit;
+    display: block;
+  }
+
+  .band-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    display: block;
+  }
+
+  .band-card strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: 14px;
+  }
+
+  .band-bio {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, margin-top 0.3s ease;
+  }
+
+  .band-card.open .band-bio {
+    max-height: 700px;
+    margin-top: 12px;
+  }
+
+  .band-bio p {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+    text-align: left;
+  }
+
+  .info-text {
+    font-size: clamp(15px, 2.4vw, 19px);
+    font-weight: 500;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .poster {
+    padding: 0 24px 48px;
+    max-width: 700px;
+  }
+
+  .poster img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+  }
+
+  footer {
+    text-align: center;
+    padding: 32px 24px 48px;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0.8;
+  }
+
+  /* ---------- Mobile ---------- */
+
+  @media (max-width: 640px) {
+    .header-inner {
+      grid-template-columns: 1fr auto 1fr;
+    }
+
+    nav {
+      display: none;
+    }
+
+    nav.open {
+      display: block;
+      grid-column: 1 / -1;
+      justify-self: stretch;
+      margin-top: 16px;
+    }
+
+    nav.open ul {
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0;
+      border-top: 1px solid rgba(1, 97, 163, 0.15);
+    }
+
+    .nav-toggle {
+      display: block;
+    }
+
+    .lineup-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .map-card {
+      aspect-ratio: 4 / 5;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    nav a::after {
+      transition: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <img class="logo" src="logo.png" alt="Kori Jazz">
+    </div>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Avaa valikko" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+
+    <nav id="mainNav">
+      <ul>
+        <li><a href="#schedule">Schedule</a></li>
+        <li><a href="#map">Map</a></li>
+        <li><a href="#lineup">Lineup</a></li>
+        <li><a href="#basketball">Basketball</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" style="padding-top: 40px;">
+    <h1>Live jazz and<br>open street basketball</h1>
+    <p class="tagline">Come enjoy the music and atmosphere, or jump on the court for a game. Free entry, open for everybody!</p>
+
+    <p class="event-date"><span class="event-day">22.8.</span><br>Hermanni Basketball Court</p>
+  </section>
+
+  <section id="schedule">
+    <h2>Schedule</h2>
+    <div class="card">
+      <ul class="schedule-list">
+        <li><span>Antti Ahoniemi Trio</span><time>14:00</time></li>
+        <li><span>Siina Suutarinen Super Sonic feat. Oona Mattsson</span><time>15:30</time></li>
+        <li><span>Dunk Contest</span><time>16:45</time></li>
+        <li><span>Mubba and The Afrotan</span><time>17:30</time></li>
+        <li><span>Open Jam Session hosted by Siina Suutarinen Super Sonic</span><time>18:45</time></li>
+        <li><span>Kadi Vija</span><time>20:00</time></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="map">
+    <h2>Map</h2>
+    <div class="card map-card">
+      <iframe
+        src="https://www.google.com/maps?q=Hermannin+koripallokentt%C3%A4,+H%C3%A4meentie+105,+00550+Helsinki&output=embed"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </section>
+
+  <section id="lineup">
+    <h2>Lineup</h2>
+    <div class="lineup-grid">
+      <button class="band-card" type="button">
+        <img src="band1.jpg" alt="Antti Ahoniemi Trio">
+        <div class="band-bio">
+          <p>Antti Ahoniemi Trio, established in 2025, plays mostly original tunes. The trio constructs lively sets brought to life by the expressiveness of its members. Soprano saxophone, double bass and drums combine with percussions to provide an open sound which expands to different directions within the varied tradition of swinging music. <br><br>
+Antti Ahoniemi - double bass <br>
+Adele Sauros - soprano saxophone <br>
+Joonas Leppänen - drums
+ </p>
+        </div>
+      </button>
+
+      <button class="band-card" type="button">
+        <img src="band2.jpg" alt="Siina Suutarinen Super Sonic feat. Oona Mattsson">
+        <div class="band-bio">
+          <p>Siina Suutarinen is a singer, composer and pianist established on the Finnish jazz scene, now building an international career with her English-language music. Known for her soft, distinctive vocal sound — often compared to Diana Krall — Suutarinen performs with her band Super Sonic at jazz festivals and clubs in Finland and abroad in 2026. At Kori Jazz, the band's second soloist is saxophonist Oona Mattsson, bringing her own fresh, dynamic style. This time Suutarinen also plays synth bass, making this a hybrid lineup you won't want to miss! <br> <br>
+            Super Sonic blends vocal-driven jazz with a modern, partly electronic band sound, aiming to bring jazz closer to audiences and cross genre lines in an accessible way. <br><br>
+            Siina Suutarinen – vocals, synth bass<br>
+            Oona Mattsson – saxophones<br>
+            Ilari Mäkelä – piano, synth<br>
+            Arttu Huopainen – drums</p>
+        </div>
+      </button>
+
+      <button class="band-card" type="button">
+        <img src="band3.jpg" alt="Mubba and The Afrotan">
+        <div class="band-bio">
+          <p>Mubba & The Afrotan is a trans-nation music project led by a Tanzanian composer and a bandleader Mubba. The project brings together musicians from Africa, Italy, Chile and Finland forming a live ensemble that reflects the realities of contemporary global culture. The band fuses Tanzania and broader African rhythms and melodies with jazz improvisation developed in Finland creating a new musical expression through collaborative composition and performance. <br><br>
+            Baraka Issabu- <br>
+            Yoni Vierre - <br>
+            Constanza Garcia - <br>
+            Humphrey Mubba - <br>
+            Aarne Toivonen - </p>
+        </div>
+      </button>
+
+      <button class="band-card" type="button">
+        <img src="band4.jpg" alt="Kadi Vija">
+        <div class="band-bio">
+          <p>Sound artist Kadi Vija and keyboard player Nikita Rafaelov bring to the stage an intimate and curious story of family, love and about looking or seeing in another way. “Tiny Hands Gathering Wonder, The World Becomes Magic” tells a story of Teppo, who is born into an LGBTQ+ family – this isn’t childhood fiction but poetry about the mundane, where the world takes shape from a slightly different angle. The album, which won both the Emma and Indie Award for Jazz of the Year, was produced by the renowned drummer/producer Teppo Mäkynen and was released by the Tampere based Mustik Motel Music in October 2025. <br><br>
+            Musically the piece revolves around experimental electronic art and indie-style delicateness akin to Radiohead and Björk. The sound is layered and atmospheric – like the thought of a child: a little crooked but right where it should be. On the stage, Kadi and Nikita create a soundscape where the spectator can listen, ask, and be themselves.<br><br>
+            Kadi Vija - synthesizers and vocals<br>
+            Nikita Rafaelov - synthesizers and keyboards</p>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <section id="basketball">
+    <h2>Basketball</h2>
+    <div class="card no-border">
+      <p class="info-text">Street basketball games are organized by Yökoris. Just show up and join in, no sign-up needed, and no team required. You're also welcome to come with your own ready-made 3-on-3 team. Bring your own shoes, basketballs are provided on site. See you on the court!</p>
+    </div>
+  </section>
+
+  <section class="poster">
+    <img src="poster.jpg" alt="Kori Jazz -juliste">
+  </section>
+</main>
+
+<footer>
+  Kori Jazz &mdash; live jazz &amp; street basketball
+</footer>
+
+<script>
+  const toggle = document.getElementById('navToggle');
+  const nav = document.getElementById('mainNav');
+
+  toggle.addEventListener('click', () => {
+    const isOpen = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', isOpen);
+  });
+
+  nav.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  document.querySelectorAll('.band-card').forEach(card => {
+    card.addEventListener('click', () => {
+      card.classList.toggle('open');
+    });
+  });
+</script>
+
+</body>
+</html>
