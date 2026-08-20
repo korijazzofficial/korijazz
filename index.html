@@ -292,6 +292,45 @@
     font-weight: 500;
     line-height: 1.6;
     text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .basketball-schedule {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 24px;
+    text-align: left;
+  }
+
+  .basketball-schedule li {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(1, 97, 163, 0.25);
+    font-weight: 500;
+    font-size: 15px;
+  }
+
+  .basketball-schedule li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .basketball-schedule time {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .basketball-schedule .sub-heading {
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    opacity: 0.75;
+    margin-top: 8px;
   }
 
   .poster {
@@ -502,7 +541,7 @@
   </section>
 
   <section id="schedule">
-    <h2>Schedule</h2>
+    <h2>Jazz schedule</h2>
     <div class="card">
       <ul class="schedule-list">
         <li><span>Antti Ahoniemi Trio</span><time>14:00</time></li>
@@ -516,6 +555,7 @@
 
   <section id="map">
     <h2>Map</h2>
+    <p class="location-text">Hermannin koripallokenttä, Hämeentie 105, Helsinki</p>
     <div class="card map-card">
       <iframe
         src="https://www.google.com/maps?q=Hermannin+koripallokentt%C3%A4,+H%C3%A4meentie+105,+00550+Helsinki&output=embed"
@@ -578,8 +618,16 @@ Joonas Leppänen - drums
 
   <section id="basketball">
     <h2>Basketball</h2>
-    <div class="card no-border">
-      <p class="info-text">Street basketball games are organized by Yökoris. Just show up and join in, no sign-up needed, and no team required. You're also welcome to come with your own ready-made 3-on-3 team. Bring your own shoes, basketballs are provided on site. See you on the court!</p>
+    <p class="info-text">Street basketball games are organized by Yökoris. Just show up and join in, no sign-up needed, and no team required. You're also welcome to come with your own ready-made 3-on-3 team. Bring your own shoes, basketballs are provided on site. See you on the court!</p>
+
+    <div class="card">
+      <ul class="basketball-schedule">
+        <li><span>Women and non-binary games</span><time>14:00–15:30</time></li>
+        <li><span>Open games for everyone</span><time>15:30–21:00</time></li>
+        <li class="sub-heading">Short competitions between games</li>
+        <li><span>Half court shootout and jelly contest</span><time>16:30</time></li>
+        <li><span>Dunk contest</span><time>18:30</time></li>
+      </ul>
     </div>
   </section>
 
@@ -598,7 +646,7 @@ Joonas Leppänen - drums
   <section class="collab">
     <p class="collab-label">In collaboration with:</p>
     <img src="yokoris-logo.PNG" alt="Yökoris" class="collab-logo">
-    
+
     <p class="collab-label">Supported by:</p>
     <div class="sponsor-row">
       <img src="sponsor1.png" alt="Tukija 1">
