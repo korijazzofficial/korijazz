@@ -408,7 +408,7 @@
 <main>
   <section class="hero" style="padding-top: 40px;">
     <h1>Live jazz and<br>open street basketball</h1>
-    <p class="tagline">Kori Jazz returns in 2027! Come enjoy the music and atmosphere, or jump on the court for a game. Free entry, open for everybody!</p>
+    <p class="tagline">Kori Jazz returns in 2027 — come play, listen, and celebrate with us again next summer.</p>
   </section>
 
   <section id="photos" class="photos">
@@ -503,7 +503,6 @@
       const img = document.createElement('img');
       img.src = src;
       img.alt = 'Kori Jazz 2026';
-      img.loading = 'lazy';
       img.draggable = false;
       track.appendChild(img);
     });
@@ -528,6 +527,10 @@
       state.halfWidth = track.scrollWidth / 2;
     };
     window.addEventListener('load', measure);
+    window.addEventListener('resize', measure);
+    track.querySelectorAll('img').forEach(img => {
+      img.addEventListener('load', measure);
+    });
     measure();
 
     // Native click still fires reliably on a real tap/click (no drag),
