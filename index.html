@@ -408,7 +408,7 @@
 <main>
   <section class="hero" style="padding-top: 40px;">
     <h1>Live jazz and<br>open street basketball</h1>
-    <p class="tagline">Kori Jazz returns in 2027! Come enjoy the music and atmosphere, or jump on the court for a game. Free entry, open for everybody!</p>
+    <p class="tagline">Kori Jazz returns in 2027 — come play, listen, and celebrate with us again next summer.</p>
   </section>
 
   <section id="photos" class="photos">
@@ -520,6 +520,7 @@
       dragStartX: 0,
       dragStartPos: 0,
       moved: false,
+      downTarget: null,
       resumeAt: 0
     };
     trackStates.push(state);
@@ -530,20 +531,12 @@
     window.addEventListener('load', measure);
     measure();
 
-    // Click on an image opens the lightbox, unless the click was actually a drag
-    track.querySelectorAll('img').forEach((img, i) => {
-      img.addEventListener('click', () => {
-        if (state.moved) return;
-        lightboxImg.src = img.getAttribute('src');
-        lightbox.classList.add('open');
-      });
-    });
-
     const onPointerDown = e => {
       state.dragging = true;
       state.moved = false;
       state.dragStartX = e.clientX;
       state.dragStartPos = state.pos;
+      state.downTarget = e.target.closest('img');
       track.classList.add('dragging');
       track.setPointerCapture && track.setPointerCapture(e.pointerId);
     };
@@ -562,6 +555,13 @@
       track.classList.remove('dragging');
       // brief pause before auto-scroll resumes, so it doesn't yank away instantly
       state.resumeAt = performance.now() + 600;
+
+      // treat as a click (not a drag) if the pointer barely moved
+      if (!state.moved && state.downTarget) {
+        lightboxImg.src = state.downTarget.getAttribute('src');
+        lightbox.classList.add('open');
+      }
+      state.downTarget = null;
     };
 
     track.addEventListener('pointerdown', onPointerDown);
