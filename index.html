@@ -544,7 +544,9 @@
     const onPointerMove = e => {
       if (!state.dragging) return;
       const delta = e.clientX - state.dragStartX;
-      if (Math.abs(delta) > 4) state.moved = true;
+      // touch input has more natural jitter than a mouse, so use a looser threshold
+      const threshold = e.pointerType === 'touch' ? 10 : 4;
+      if (Math.abs(delta) > threshold) state.moved = true;
       state.pos = state.dragStartPos + delta;
       applyTransform(state);
     };
