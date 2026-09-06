@@ -520,7 +520,6 @@
       dragStartX: 0,
       dragStartPos: 0,
       moved: false,
-      downTarget: null,
       resumeAt: 0
     };
     trackStates.push(state);
@@ -531,20 +530,19 @@
     window.addEventListener('load', measure);
     measure();
 
-    const onPointerDown = e => {
-      state.dragging = true;
-      state.moved = false;
-      state.dragStartX = e.clientX;
-      state.dragStartPos = state.pos;
-      state.downTarget = e.target.closest('img');
-      track.classList.add('dragging');
-      track.setPointerCapture && track.setPointerCapture(e.pointerId);
-    };
+    // Native click still fires reliably on a real tap/click (no drag),
+    // as long as we don't use pointer capture (which suppresses it).
+    track.querySelectorAll('img').forEach(img => {
+      img.addEventListener('click', () => {
+        if (state.moved) return;
+        lightboxImg.src = img.getAttribute('src');
+        lightbox.classList.add('open');
+      });
+    });
 
     const onPointerMove = e => {
       if (!state.dragging) return;
       const delta = e.clientX - state.dragStartX;
-      // touch input has more natural jitter than a mouse, so use a looser threshold
       const threshold = e.pointerType === 'touch' ? 10 : 4;
       if (Math.abs(delta) > threshold) state.moved = true;
       state.pos = state.dragStartPos + delta;
@@ -557,21 +555,20 @@
       track.classList.remove('dragging');
       // brief pause before auto-scroll resumes, so it doesn't yank away instantly
       state.resumeAt = performance.now() + 600;
-
-      // treat as a click (not a drag) if the pointer barely moved
-      if (!state.moved && state.downTarget) {
-        lightboxImg.src = state.downTarget.getAttribute('src');
-        lightbox.classList.add('open');
-      }
-      state.downTarget = null;
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointercancel', onPointerUp);
     };
 
-    track.addEventListener('pointerdown', onPointerDown);
-    track.addEventListener('pointermove', onPointerMove);
-    track.addEventListener('pointerup', onPointerUp);
-    track.addEventListener('pointercancel', onPointerUp);
-    track.addEventListener('pointerleave', () => {
-      if (state.dragging) onPointerUp();
+    track.addEventListener('pointerdown', e => {
+      state.dragging = true;
+      state.moved = false;
+      state.dragStartX = e.clientX;
+      state.dragStartPos = state.pos;
+      track.classList.add('dragging');
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointerup', onPointerUp);
+      window.addEventListener('pointercancel', onPointerUp);
     });
   });
 
