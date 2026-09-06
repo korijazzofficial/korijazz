@@ -293,13 +293,13 @@
     display: flex;
     gap: 16px;
     width: max-content;
-    animation-name: scrollTrack;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
   }
 
-  .photo-track:hover {
-    animation-play-state: paused;
+  .photo-track.dragging {
+    cursor: grabbing;
   }
 
   .photo-track img {
@@ -309,11 +309,7 @@
     cursor: pointer;
     flex-shrink: 0;
     display: block;
-  }
-
-  @keyframes scrollTrack {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+    -webkit-user-drag: none;
   }
 
   .lightbox {
@@ -379,9 +375,6 @@
     }
     nav a::after {
       transition: none;
-    }
-    .photo-track {
-      animation: none;
     }
   }
 </style>
@@ -486,41 +479,129 @@
   const landscapeImages = Array.from({ length: 17 }, (_, i) => `landscape${i + 1}.jpg`);
   const portraitImages = Array.from({ length: 11 }, (_, i) => `portrait${i + 1}.jpg`);
 
-  const rows = [
-    { images: landscapeImages.slice(0, 9), direction: 'left', duration: 60 },
-    { images: portraitImages, direction: 'right', duration: 75 },
-    { images: landscapeImages.slice(9), direction: 'left', duration: 55 }
+  const rowConfigs = [
+    { images: landscapeImages.slice(0, 9), direction: 'left', speed: 22 },
+    { images: portraitImages, direction: 'right', speed: 16 },
+    { images: landscapeImages.slice(9), direction: 'left', speed: 26 }
   ];
 
   const gallery = document.getElementById('photoGallery');
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImg');
 
-  rows.forEach(row => {
+  const trackStates = [];
+
+  rowConfigs.forEach(config => {
     const rowEl = document.createElement('div');
     rowEl.className = 'photo-row';
 
     const track = document.createElement('div');
     track.className = 'photo-track';
-    track.style.animationDuration = row.duration + 's';
-    track.style.animationDirection = row.direction === 'right' ? 'reverse' : 'normal';
 
     // Images are duplicated so the loop is seamless
-    row.images.concat(row.images).forEach(src => {
+    config.images.concat(config.images).forEach(src => {
       const img = document.createElement('img');
       img.src = src;
       img.alt = 'Kori Jazz 2026';
       img.loading = 'lazy';
-      img.addEventListener('click', () => {
-        lightboxImg.src = src;
-        lightbox.classList.add('open');
-      });
+      img.draggable = false;
       track.appendChild(img);
     });
 
     rowEl.appendChild(track);
     gallery.appendChild(rowEl);
+
+    const state = {
+      track,
+      pos: 0,
+      halfWidth: 0,
+      speed: config.direction === 'right' ? -config.speed : config.speed,
+      dragging: false,
+      dragStartX: 0,
+      dragStartPos: 0,
+      moved: false,
+      resumeAt: 0
+    };
+    trackStates.push(state);
+
+    const measure = () => {
+      state.halfWidth = track.scrollWidth / 2;
+    };
+    window.addEventListener('load', measure);
+    measure();
+
+    // Click on an image opens the lightbox, unless the click was actually a drag
+    track.querySelectorAll('img').forEach((img, i) => {
+      img.addEventListener('click', () => {
+        if (state.moved) return;
+        lightboxImg.src = img.getAttribute('src');
+        lightbox.classList.add('open');
+      });
+    });
+
+    const onPointerDown = e => {
+      state.dragging = true;
+      state.moved = false;
+      state.dragStartX = e.clientX;
+      state.dragStartPos = state.pos;
+      track.classList.add('dragging');
+      track.setPointerCapture && track.setPointerCapture(e.pointerId);
+    };
+
+    const onPointerMove = e => {
+      if (!state.dragging) return;
+      const delta = e.clientX - state.dragStartX;
+      if (Math.abs(delta) > 4) state.moved = true;
+      state.pos = state.dragStartPos + delta;
+      applyTransform(state);
+    };
+
+    const onPointerUp = () => {
+      if (!state.dragging) return;
+      state.dragging = false;
+      track.classList.remove('dragging');
+      // brief pause before auto-scroll resumes, so it doesn't yank away instantly
+      state.resumeAt = performance.now() + 600;
+    };
+
+    track.addEventListener('pointerdown', onPointerDown);
+    track.addEventListener('pointermove', onPointerMove);
+    track.addEventListener('pointerup', onPointerUp);
+    track.addEventListener('pointercancel', onPointerUp);
+    track.addEventListener('pointerleave', () => {
+      if (state.dragging) onPointerUp();
+    });
   });
+
+  function applyTransform(state) {
+    if (state.halfWidth > 0) {
+      // wrap the position so the loop stays seamless in both directions
+      if (state.pos <= -state.halfWidth) state.pos += state.halfWidth;
+      if (state.pos > 0) state.pos -= state.halfWidth;
+    }
+    state.track.style.transform = `translateX(${state.pos}px)`;
+  }
+
+  let lastFrame = performance.now();
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function tick(now) {
+    const dt = (now - lastFrame) / 1000;
+    lastFrame = now;
+
+    if (!prefersReducedMotion) {
+      trackStates.forEach(state => {
+        if (!state.dragging && now >= state.resumeAt) {
+          state.pos -= state.speed * dt;
+          applyTransform(state);
+        }
+      });
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
 
   lightbox.addEventListener('click', () => {
     lightbox.classList.remove('open');
