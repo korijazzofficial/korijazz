@@ -182,6 +182,34 @@
     text-align: center;
   }
 
+  .guidelines {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .guidelines li {
+    position: relative;
+    padding-left: 22px;
+    font-size: clamp(15px, 2.2vw, 17px);
+    font-weight: 500;
+    line-height: 1.6;
+  }
+
+  .guidelines li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ink);
+  }
+
   .poster {
     padding: 0 24px 48px;
     max-width: 700px;
@@ -399,6 +427,7 @@
       <ul>
         <li><a href="#photos">Photos</a></li>
         <li><a href="#basketball">Basketball</a></li>
+        <li><a href="#safespace">Safe space</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
@@ -425,6 +454,19 @@
 
   <section class="poster">
     <img src="poster.jpg" alt="Kori Jazz -juliste">
+  </section>
+
+  <section id="safespace">
+    <h2>Safe space guidelines</h2>
+    <ul class="guidelines">
+      <li>Respect everyone’s personal space. Ask before touching and adjust your behaviour if someone indicates that your behaviour makes them feel uncomfortable.</li>
+      <li>Respect everyone and do not make assumptions about other’s sexuality, gender, nationality, ethnicity, religion, values, backgrounds, abilities or health. Respect pronouns and names. Be aware of your own privileges.</li>
+      <li>Do not discriminate based on body. Do not comment on other people’s bodies, eating habits or portion sizes.</li>
+      <li>Respect others’ opinions, beliefs and viewpoints. Do not mock or humiliate anyone.</li>
+      <li>Take responsibility for your own actions, as they affect others. No heavy drinking.</li>
+      <li>Intervene if you see harassment and offer help to the person being harassed. Do not remain just an onlooker.</li>
+      <li>If a situation feels distressing or if you see harassment, abuse, or discrimination, approach a Kori Jazz member. They can be identified by the Kori Jazz T-Shirts. You can also send us a private message on Instagram.</li>
+    </ul>
   </section>
 
   <section id="contact">
